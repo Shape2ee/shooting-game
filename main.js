@@ -33,12 +33,12 @@ let keysDown = {};
 function setupKeyboardListener() {
   document.addEventListener("keydown", (event) => {
     keysDown[event.key] = true;
-    console.log(keysDown);
+    // console.log(keysDown);
   });
 
   document.addEventListener("keyup", (event) => {
     delete keysDown[event.key];
-    console.log("버튼클릭후" + keysDown);
+    // console.log("버튼클릭후" + keysDown);
   });
 }
 
@@ -60,6 +60,7 @@ function update() {
 
   if ("ArrowDown" in keysDown) {
     spaceShipY += 3;
+    // down
   }
 
   // 우주선의 좌표값이 경기장 안에서만 있게 하는 법
@@ -85,7 +86,7 @@ function renderImage() {
 function main() {
   update();
   renderImage();
-  console.log("animation calls main function");
+  // console.log("animation calls main function");
   requestAnimationFrame(main);
 }
 
