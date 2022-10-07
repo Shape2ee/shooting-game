@@ -53,11 +53,26 @@ function update() {
     // left
   }
 
+  if ("ArrowUp" in keysDown) {
+    spaceShipY -= 3;
+    // up
+  }
+
+  if ("ArrowDown" in keysDown) {
+    spaceShipY += 3;
+  }
+
   // 우주선의 좌표값이 경기장 안에서만 있게 하는 법
   if (spaceShipX <= 0) {
     spaceShipX = 0;
   } else if (spaceShipX >= canvas.width - 64) {
     spaceShipX = canvas.width - 64;
+  }
+
+  if (spaceShipY <= 0) {
+    spaceShipY = 0;
+  } else if (spaceShipY >= canvas.height - 64) {
+    spaceShipY = canvas.height - 64;
   }
 }
 
