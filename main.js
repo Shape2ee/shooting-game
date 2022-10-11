@@ -4,7 +4,7 @@ let ctx;
 canvas = document.querySelector("canvas");
 ctx = canvas.getContext("2d");
 canvas.width = 400;
-canvas.height = 700;
+canvas.height = window.innerHeight - 100;
 
 let backgroundImage, spaceShipImage, bulletImage, monsterImage, gameOverImage;
 
@@ -26,6 +26,25 @@ function Bullet() {
 
   this.update = function () {
     this.y -= 7;
+  };
+}
+
+function generateRandomValue(min, max) {
+  let randomNum = Math.trunc(Math.random() * (max - min + 1));
+
+  return randomNum;
+}
+
+let monsterList = [];
+
+function Monster() {
+  this.x = 0;
+  this.y = 0;
+  this.init = function () {
+    this.y = 0;
+    this.x = generateRandomValue(0, canvas.width - 48);
+
+    monsterList.push(this);
   };
 }
 
@@ -69,6 +88,13 @@ function createBullet() {
   b.init();
 
   console.log("새로운 총알 리스트", bulletList);
+}
+
+function createMoster() {
+  const interval = setInterval(function () {
+    let e = new Monster();
+    e.init();
+  }, 1000);
 }
 
 function update() {
@@ -119,6 +145,10 @@ function renderImage() {
   for (let i = 0; i < bulletList.length; i++) {
     ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
   }
+
+  for (let i = 0; i < monsterList.length; i++) {
+    ctx.drawImage(monsterImage, monsterList[i].x, monsterList[i].y);
+  }
 }
 
 function main() {
@@ -129,6 +159,7 @@ function main() {
 
 loadImage();
 setupKeyboardListener();
+createMoster();
 main();
 
 // 총알만들기
@@ -137,3 +168,11 @@ main();
 // 3. 발사된 총알들은 총알 배열에 저장
 // 4. 총알들은 x,y 좌표값이 있어야 한다.
 // 5. 총알 배열을 가지고 render
+
+// 적군 특징
+// x, y, init, update
+// 1. 적군의 위치가 랜덤
+// 2. 밑으로 움직임
+// 3. 1초마다 하나씩 적군이 나온다. -> 레벨 시스템을 적용해서 시간초 줄어들기
+// 4. 적군의 우주선이 바닥에 닿으면 게임오버
+// 5. 적군과 총알이 만나면 적군이 사라지고 1점 획득
