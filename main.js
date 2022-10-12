@@ -8,13 +8,15 @@ canvas.height = window.innerHeight - 150;
 
 let backgroundImage, spaceShipImage, bulletImage, monsterImage, gameOverImage;
 let gameOver = false; // true이면 게임이 끝남,
-
+let score = 0;
 // 우주선 좌표
 let spaceShipX = canvas.width / 2 - 32;
 let spaceShipY = canvas.height - 64;
 
-// 총알
+let monsterList = [];
 let bulletList = []; // 총알들을 저장하는 리스트
+
+// 총알
 function Bullet() {
   this.x = 0;
   this.y = 0;
@@ -22,12 +24,27 @@ function Bullet() {
     // 총알의 위치 초기화
     this.x = spaceShipX + 16;
     this.y = spaceShipY;
+    this.alive = true; // true면 살아있는 총알.
 
     bulletList.push(this);
   };
 
   this.update = function () {
     this.y -= 7;
+  };
+
+  this.checkHit = function () {
+    for (let i = 0; i < monsterList.length; i++) {
+      if (
+        this.y <= monsterList[i].y &&
+        this.x >= monsterList[i].x &&
+        this.x <= monsterList[i].x + 48
+      ) {
+        score++;
+        this.alive = false;
+        monsterList.splice(i, 1); // 잘라내기
+      }
+    }
   };
 }
 
@@ -38,7 +55,7 @@ function generateRandomValue(min, max) {
 }
 
 // 몬스터
-let monsterList = [];
+
 function Monster() {
   this.x = 0;
   this.y = 0;
@@ -145,7 +162,10 @@ function update() {
 
   // 총알의 y좌표 업데이트
   for (let i = 0; i < bulletList.length; i++) {
-    bulletList[i].update();
+    if (bulletList[i].alive) {
+      bulletList[i].update();
+      bulletList[i].checkHit();
+    }
   }
 
   // 몬스터 y좌표 업데이트
@@ -158,9 +178,14 @@ function renderImage() {
   // drawImage(image, dx, dy, (dwidth, dheight))
   ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
   ctx.drawImage(spaceShipImage, spaceShipX, spaceShipY);
+  ctx.fillText(`Score:${score}`, 20, 30);
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
 
   for (let i = 0; i < bulletList.length; i++) {
-    ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
+    if (bulletList[i].alive) {
+      ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
+    }
   }
 
   for (let i = 0; i < monsterList.length; i++) {
@@ -175,17 +200,17 @@ function main() {
     renderImage(); // 이미지 그려주기
     requestAnimationFrame(main);
   } else {
-    const imgPosValue = 380;
-    const harfImgPosValue = imgPosValue / 2;
-    const gameOverPosX = canvas.width / 2 - harfImgPosValue;
-    const gameOverPosY = canvas.height / 2 - harfImgPosValue;
+    const IMG_SIZE = 380;
+    const HARF_IMG_SIZE = IMG_SIZE / 2;
+    const gameOverPosX = canvas.width / 2 - HARF_IMG_SIZE;
+    const gameOverPosY = canvas.height / 2 - HARF_IMG_SIZE;
 
     ctx.drawImage(
       gameOverImage,
       gameOverPosX,
       gameOverPosY,
-      imgPosValue,
-      imgPosValue
+      IMG_SIZE,
+      IMG_SIZE
     );
   }
 }
