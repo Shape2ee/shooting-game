@@ -4,14 +4,16 @@ let ctx;
 canvas = document.querySelector("canvas");
 ctx = canvas.getContext("2d");
 canvas.width = 400;
-canvas.height = window.innerHeight - 100;
+canvas.height = window.innerHeight - 150;
 
 let backgroundImage, spaceShipImage, bulletImage, monsterImage, gameOverImage;
+let gameOver = false; // true이면 게임이 끝남,
 
 // 우주선 좌표
 let spaceShipX = canvas.width / 2 - 32;
 let spaceShipY = canvas.height - 64;
 
+// 총알
 let bulletList = []; // 총알들을 저장하는 리스트
 function Bullet() {
   this.x = 0;
@@ -35,8 +37,8 @@ function generateRandomValue(min, max) {
   return randomNum;
 }
 
+// 몬스터
 let monsterList = [];
-
 function Monster() {
   this.x = 0;
   this.y = 0;
@@ -46,8 +48,17 @@ function Monster() {
 
     monsterList.push(this);
   };
+
+  this.update = function () {
+    this.y += 2; // 적군 속도 조절
+
+    if (this.y >= canvas.height - 48) {
+      gameOver = true;
+    }
+  };
 }
 
+// 이미지 로드
 function loadImage() {
   backgroundImage = new Image();
   backgroundImage.src = "images/background.gif";
@@ -65,6 +76,7 @@ function loadImage() {
   gameOverImage.src = "images/gameover.png";
 }
 
+// 키 이벤트
 let keysDown = {};
 function setupKeyboardListener() {
   document.addEventListener("keydown", (event) => {
@@ -91,7 +103,7 @@ function createBullet() {
 }
 
 function createMoster() {
-  const interval = setInterval(function () {
+  const interval = setInterval(() => {
     let e = new Monster();
     e.init();
   }, 1000);
@@ -135,6 +147,11 @@ function update() {
   for (let i = 0; i < bulletList.length; i++) {
     bulletList[i].update();
   }
+
+  // 몬스터 y좌표 업데이트
+  for (let i = 0; i < monsterList.length; i++) {
+    monsterList[i].update();
+  }
 }
 
 function renderImage() {
@@ -152,9 +169,25 @@ function renderImage() {
 }
 
 function main() {
-  update(); // 좌표값 업데이트
-  renderImage(); // 이미지 그려주기
-  requestAnimationFrame(main);
+  if (!gameOver) {
+    // gameOver === false
+    update(); // 좌표값 업데이트
+    renderImage(); // 이미지 그려주기
+    requestAnimationFrame(main);
+  } else {
+    const imgPosValue = 380;
+    const harfImgPosValue = imgPosValue / 2;
+    const gameOverPosX = canvas.width / 2 - harfImgPosValue;
+    const gameOverPosY = canvas.height / 2 - harfImgPosValue;
+
+    ctx.drawImage(
+      gameOverImage,
+      gameOverPosX,
+      gameOverPosY,
+      imgPosValue,
+      imgPosValue
+    );
+  }
 }
 
 loadImage();
@@ -176,3 +209,8 @@ main();
 // 3. 1초마다 하나씩 적군이 나온다. -> 레벨 시스템을 적용해서 시간초 줄어들기
 // 4. 적군의 우주선이 바닥에 닿으면 게임오버
 // 5. 적군과 총알이 만나면 적군이 사라지고 1점 획득
+
+// 적군이 죽는다.
+// 총알.y <= 적군.y &&
+// 총알.x >= 적군.x && 총알.x <= 적군.x + 적군 이미지 사이즈
+// -> 닿았다. -> 죽게됨, 적군의 우주선이 없어짐. -> 점수획득
