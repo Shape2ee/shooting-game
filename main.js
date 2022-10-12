@@ -7,6 +7,7 @@ canvas.width = 400;
 canvas.height = window.innerHeight - 150;
 
 let backgroundImage, spaceShipImage, bulletImage, monsterImage, gameOverImage;
+let gameStart = false;
 let gameOver = false; // true이면 게임이 끝남,
 let score = 0;
 // 우주선 좌표
@@ -15,6 +16,8 @@ let spaceShipY = canvas.height - 64;
 
 let monsterList = [];
 let bulletList = []; // 총알들을 저장하는 리스트
+
+let level = 1;
 
 // 총알
 function Bullet() {
@@ -55,7 +58,6 @@ function generateRandomValue(min, max) {
 }
 
 // 몬스터
-
 function Monster() {
   this.x = 0;
   this.y = 0;
@@ -67,7 +69,7 @@ function Monster() {
   };
 
   this.update = function () {
-    this.y += 2; // 적군 속도 조절
+    this.y += level; // 적군 속도 조절
 
     if (this.y >= canvas.height - 48) {
       gameOver = true;
@@ -165,12 +167,19 @@ function update() {
     if (bulletList[i].alive) {
       bulletList[i].update();
       bulletList[i].checkHit();
+    } else {
+      bulletList.splice(i, 1);
     }
   }
 
   // 몬스터 y좌표 업데이트
   for (let i = 0; i < monsterList.length; i++) {
     monsterList[i].update();
+  }
+
+  // 레벨업
+  if (score >= 3) {
+    level = 2;
   }
 }
 
