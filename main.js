@@ -20,6 +20,12 @@ let bulletList = []; // 총알들을 저장하는 리스트
 let level = 1;
 let mosterArray = 10;
 
+const button = document.getElementById("gameBtn");
+button.addEventListener("click", () => {
+  gameStart = true;
+  createMoster();
+});
+
 // 총알
 function Bullet() {
   this.x = 0;
@@ -123,10 +129,12 @@ function createBullet() {
 }
 
 function createMoster() {
-  const interval = setInterval(() => {
-    let e = new Monster();
-    e.init();
-  }, 1000);
+  if (gameStart) {
+    const interval = setInterval(() => {
+      let e = new Monster();
+      e.init();
+    }, 1000);
+  }
 }
 
 function update() {
@@ -227,7 +235,7 @@ function main() {
 
 loadImage();
 setupKeyboardListener();
-createMoster();
+// createMoster();
 main();
 
 // 총알만들기
