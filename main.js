@@ -18,6 +18,7 @@ let monsterList = [];
 let bulletList = []; // 총알들을 저장하는 리스트
 
 let level = 1;
+let mosterArray = 10;
 
 // 총알
 function Bullet() {
@@ -248,3 +249,8 @@ main();
 // 총알.y <= 적군.y &&
 // 총알.x >= 적군.x && 총알.x <= 적군.x + 적군 이미지 사이즈
 // -> 닿았다. -> 죽게됨, 적군의 우주선이 없어짐. -> 점수획득
+
+// 레벨업
+// 점수가 10점이 되면 level 업
+
+// 적군과 우주선이 닿으면 게임오버
