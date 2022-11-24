@@ -14,7 +14,7 @@
         text-align: center;
       }
 
-      .canvas {
+      .canvas-screen {
         display: flex;
         justify-content: center;
       }
@@ -22,12 +22,15 @@
   </head>
   <body>
     <h1>Shooting GAME!</h1>
-    <!-- <form>
-      <button type="submit">게임시작</button>
-    </form> -->
-    <div class="canvas">
+    <form id="start-screen">
+      <input id="name-input" placeholder="주인공 이름을 입력하세요!" />
+      <button id="game-btn">게임시작</button>
+    </form>
+    <div id="canvas-screen" style="display: none">
+      <div id="name"></div>
       <canvas></canvas>
     </div>
-    <script src="./main.js"></script>
+    <!-- <script src="./main.js"></script> -->
+    <script src="./main-class.js"></script>
   </body>
 </html>

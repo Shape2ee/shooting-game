@@ -18,7 +18,13 @@ let monsterList = [];
 let bulletList = []; // 총알들을 저장하는 리스트
 
 let level = 1;
-let mosterArray = 10;
+let cuttline = 10;
+
+const button = document.getElementById("gameBtn");
+button.addEventListener("click", () => {
+  gameStart = true;
+  createMoster();
+});
 
 // 총알
 function Bullet() {
@@ -123,10 +129,12 @@ function createBullet() {
 }
 
 function createMoster() {
-  const interval = setInterval(() => {
-    let e = new Monster();
-    e.init();
-  }, 1000);
+  if (gameStart) {
+    const interval = setInterval(() => {
+      let e = new Monster();
+      e.init();
+    }, 1000);
+  }
 }
 
 function update() {
@@ -178,10 +186,21 @@ function update() {
     monsterList[i].update();
   }
 
-  // 레벨업
-  if (score >= 3) {
+  if (score >= 10) {
     level = 2;
   }
+}
+
+function levelUpdate() {
+  // 레벨업
+  for (let i = 0; i < 10; )
+    if (score >= value) {
+      level += 1;
+      console.log(level);
+      mosterArray = 10 * level;
+      // value += 10;
+      // num = 0;
+    }
 }
 
 function renderImage() {
@@ -210,6 +229,8 @@ function main() {
     renderImage(); // 이미지 그려주기
     requestAnimationFrame(main);
   } else {
+    gameStart = false;
+
     const IMG_SIZE = 380;
     const HARF_IMG_SIZE = IMG_SIZE / 2;
     const gameOverPosX = canvas.width / 2 - HARF_IMG_SIZE;
@@ -227,7 +248,7 @@ function main() {
 
 loadImage();
 setupKeyboardListener();
-createMoster();
+// createMoster();
 main();
 
 // 총알만들기
