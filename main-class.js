@@ -2,6 +2,7 @@ const $startScreen = document.querySelector("#start-screen");
 const $canvasScreen = document.querySelector("#canvas-screen");
 const $name = document.querySelector("#name");
 let keysDown = {};
+let bulletList = []; // 총알 저장 리스트
 
 class Game {
   constructor(name) {
@@ -63,6 +64,12 @@ class Game {
     ctx.fillText(`Score:${spaceShip.score}`, 20, 30);
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
+
+    for (let i = 0; i < bulletList.length; i++) {
+      if (bulletList[i].alive) {
+        ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
+      }
+    }
   }
   keyEvent() {
     document.addEventListener("keydown", (evnet) => {
@@ -73,10 +80,14 @@ class Game {
     document.addEventListener("keyup", (event) => {
       delete keysDown[event.key];
       // console.log(keysDown);
+
+      if (event.key == " ") {
+        this.createBullet(); // 총알 생성
+      }
     });
   }
   update() {
-    const { spaceShip } = this;
+    const { spaceShip, bullet } = this;
     if ("ArrowRight" in keysDown) {
       spaceShip.x += 3;
       // right
@@ -86,6 +97,22 @@ class Game {
       spaceShip.x -= 3;
       // left
     }
+
+    for (let i = 0; i < bulletList.length; i++) {
+      if (bulletList[i].alive) {
+        bulletList[i].update();
+        // bulletList[i].checkHit();
+      } else {
+        bulletList.splice(i, 1);
+      }
+    }
+  }
+  createBullet() {
+    const { spaceShip } = this;
+    let b = new Bullet();
+    b.init(spaceShip.x, spaceShip.y);
+
+    console.log(b, bulletList);
   }
 }
 
@@ -96,6 +123,29 @@ class SpaceShip {
     this.score = 0;
     this.x = x;
     this.y = y;
+  }
+  getScore(score) {
+    this.score = score;
+    if (this.score >= this.lev * 10) {
+      this.lev += 1;
+    }
+  }
+}
+
+class Bullet {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
+  init(spaceShipX, spaceShipY) {
+    this.x = spaceShipX + 16;
+    this.y = spaceShipY;
+    this.alive = true;
+
+    bulletList.push(this);
+  }
+  update() {
+    this.y -= 7;
   }
 }
 
