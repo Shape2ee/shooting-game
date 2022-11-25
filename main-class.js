@@ -63,7 +63,7 @@ class Game {
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
     ctx.fillText(`Score:${spaceShip.score}`, 20, 30);
     ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
+    ctx.font = "20px Arial";
 
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
@@ -89,13 +89,19 @@ class Game {
   update() {
     const { spaceShip, bullet } = this;
     if ("ArrowRight" in keysDown) {
-      spaceShip.x += 3;
+      spaceShip.x += 4;
       // right
     }
 
     if ("ArrowLeft" in keysDown) {
-      spaceShip.x -= 3;
+      spaceShip.x -= 4;
       // left
+    }
+
+    if (spaceShip.x <= 0) {
+      spaceShip.x = 0;
+    } else if (spaceShip.x >= this.canvas.width - 64) {
+      spaceShip.x = this.canvas.width - 64;
     }
 
     for (let i = 0; i < bulletList.length; i++) {
