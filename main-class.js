@@ -1,158 +1,192 @@
 const $startScreen = document.querySelector("#start-screen");
 const $canvasScreen = document.querySelector("#canvas-screen");
 const $name = document.querySelector("#name");
-let $canvas;
-let ctx;
-
-$canvas = document.querySelector("canvas");
-ctx = $canvas.getContext("2d");
-$canvas.width = 400;
-$canvas.height = window.innerHeight - 150;
-
-let backgroundImage, spaceShipImage, bulletImage, monsterImage, gameOverImage;
-let gameStart = false;
-let gameOver = false; // true이면 게임이 끝남,
-let score = 0;
-// 우주선 좌표
-let spaceShipX = $canvas.width / 2 - 32;
-let spaceShipY = $canvas.height - 64;
-
-let monsterList = [];
-let bulletList = []; // 총알들을 저장하는 리스트
-
-let level = 1;
-let cuttline = 10;
-
-// 이미지 로드
-function loadImage() {
-  backgroundImage = new Image();
-  backgroundImage.src = "images/background.gif";
-
-  spaceShipImage = new Image();
-  spaceShipImage.src = "images/spaceship.png";
-
-  bulletImage = new Image();
-  bulletImage.src = "images/bullet.png";
-
-  monsterImage = new Image();
-  monsterImage.src = "images/monster.png";
-
-  gameOverImage = new Image();
-  gameOverImage.src = "images/gameover.png";
-}
-
-function renderImage() {
-  // drawImage(image, dx, dy, (dwidth, dheight))
-  ctx.drawImage(backgroundImage, 0, 0, $canvas.width, $canvas.height);
-  ctx.drawImage(spaceShipImage, spaceShipX, spaceShipY);
-  ctx.fillText(`Score:${score}`, 20, 30);
-  ctx.fillStyle = "white";
-  ctx.font = "20px Arial";
-
-  for (let i = 0; i < bulletList.length; i++) {
-    if (bulletList[i].alive) {
-      ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
-    }
-  }
-
-  for (let i = 0; i < monsterList.length; i++) {
-    ctx.drawImage(monsterImage, monsterList[i].x, monsterList[i].y);
-  }
-}
-
-// 키 이벤트
 let keysDown = {};
-function setupKeyboardListener() {
-  document.addEventListener("keydown", (event) => {
-    keysDown[event.key] = true;
-    // console.log(keysDown);
-  });
+let bulletList = []; // 총알 저장 리스트
+let monsterList = [];
 
-  document.addEventListener("keyup", (event) => {
-    delete keysDown[event.key];
-    // console.log("버튼클릭후" + keysDown);
+class Game {
+  constructor(name) {
+    this.canvas = document.querySelector("canvas");
+    this.ctx = this.canvas.getContext("2d");
+    this.canvas.width = 400;
+    this.canvas.height = window.innerHeight - 150;
 
-    if (event.key == " ") {
-      createBullet(); // 총알 생성
-    }
-  });
-}
-
-function update() {
-  if ("ArrowRight" in keysDown) {
-    spaceShipX += 3;
-    // right
+    this.start(name);
   }
+  start(name) {
+    $name.textContent = name;
+    this.changeScreen("game");
+    this.loadImage();
 
-  if ("ArrowLeft" in keysDown) {
-    spaceShipX -= 3;
-    // left
-  }
-
-  if ("ArrowUp" in keysDown) {
-    spaceShipY -= 3;
-    // up
-  }
-
-  if ("ArrowDown" in keysDown) {
-    spaceShipY += 3;
-    // down
-  }
-
-  // 우주선의 좌표값이 경기장 안에서만 있게 하는 법
-  if (spaceShipX <= 0) {
-    spaceShipX = 0;
-  } else if (spaceShipX >= $canvas.width - 64) {
-    spaceShipX = $canvas.width - 64;
-  }
-
-  if (spaceShipY <= 0) {
-    spaceShipY = 0;
-  } else if (spaceShipY >= $canvas.height - 64) {
-    spaceShipY = $canvas.height - 64;
-  }
-}
-
-function main() {
-  if (!gameOver) {
-    // gameOver === false
-    update(); // 좌표값 업데이트
-    renderImage(); // 이미지 그려주기
-    requestAnimationFrame(main);
-  } else {
-    gameStart = false;
-
-    const IMG_SIZE = 380;
-    const HARF_IMG_SIZE = IMG_SIZE / 2;
-    const gameOverPosX = canvas.width / 2 - HARF_IMG_SIZE;
-    const gameOverPosY = canvas.height / 2 - HARF_IMG_SIZE;
-
-    ctx.drawImage(
-      gameOverImage,
-      gameOverPosX,
-      gameOverPosY,
-      IMG_SIZE,
-      IMG_SIZE
+    this.spaceShip = new SpaceShip(
+      name,
+      this.canvas.width / 2 - 32,
+      this.canvas.height - 64
     );
+
+    this.keyEvent();
+    this.createMonster();
+    this.main();
+  }
+  changeScreen(screen) {
+    if (screen === "start") {
+      $startScreen.style.display = "block";
+      $canvasScreen.style.display = "none";
+    } else if (screen === "game") {
+      $startScreen.style.display = "none";
+      $canvasScreen.style.display = "block";
+    }
+  }
+  main() {
+    this.update();
+    this.renderImage();
+    requestAnimationFrame(() => this.main());
+  }
+  loadImage() {
+    this.backgroundImage = new Image();
+    this.backgroundImage.src = "images/background.gif";
+
+    this.spaceShipImage = new Image();
+    this.spaceShipImage.src = "images/spaceship.png";
+
+    this.bulletImage = new Image();
+    this.bulletImage.src = "images/bullet.png";
+
+    this.monsterImage = new Image();
+    this.monsterImage.src = "images/monster.png";
+
+    this.gameOverImage = new Image();
+    this.gameOverImage.src = "images/gameover.png";
+  }
+  renderImage() {
+    const { ctx, spaceShip, canvas } = this;
+    ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+    ctx.fillText(`Score:${spaceShip.score}`, 20, 30);
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+
+    for (let i = 0; i < bulletList.length; i++) {
+      if (bulletList[i].alive) {
+        ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
+      }
+    }
+
+    for (let i = 0; i < monsterList.length; i++) {
+      ctx.drawImage(this.monsterImage, monsterList[i].x, monsterList[i].y);
+    }
+  }
+  keyEvent() {
+    document.addEventListener("keydown", (evnet) => {
+      keysDown[evnet.key] = true;
+      // console.log(keysDown);
+    });
+
+    document.addEventListener("keyup", (event) => {
+      delete keysDown[event.key];
+      // console.log(keysDown);
+
+      if (event.key == " ") {
+        this.createBullet(); // 총알 생성
+      }
+    });
+  }
+  update() {
+    const { spaceShip, bullet } = this;
+    if ("ArrowRight" in keysDown) {
+      spaceShip.x += 4;
+      // right
+    }
+
+    if ("ArrowLeft" in keysDown) {
+      spaceShip.x -= 4;
+      // left
+    }
+
+    if (spaceShip.x <= 0) {
+      spaceShip.x = 0;
+    } else if (spaceShip.x >= this.canvas.width - 64) {
+      spaceShip.x = this.canvas.width - 64;
+    }
+
+    for (let i = 0; i < bulletList.length; i++) {
+      if (bulletList[i].alive) {
+        bulletList[i].update();
+        // bulletList[i].checkHit();
+      } else {
+        bulletList.splice(i, 1);
+      }
+    }
+  }
+  createBullet() {
+    const { spaceShip } = this;
+    let b = new Bullet();
+    b.init(spaceShip.x, spaceShip.y);
+
+    console.log(b, bulletList);
+  }
+  createMonster() {
+    const interval = setInterval(() => {
+      let monster = new Monster();
+      monster.init(this.canvas.width);
+    }, 1000);
   }
 }
 
-function changeScreen(screen) {
-  if (screen === "start") {
-    $startScreen.style.display = "block";
-    $canvasScreen.style.display = "none";
-  } else if (screen === "game") {
-    $startScreen.style.display = "none";
-    $canvasScreen.style.display = "block";
+class SpaceShip {
+  constructor(name, x, y) {
+    this.name = name;
+    this.lev = 1;
+    this.score = 0;
+    this.x = x;
+    this.y = y;
+  }
+  levelUp(score) {
+    this.score = score;
+    if (this.score >= this.lev * 10) {
+      this.lev += 1;
+    }
   }
 }
 
+class Bullet {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
+  init(spaceShipX, spaceShipY) {
+    this.x = spaceShipX + 16;
+    this.y = spaceShipY;
+    this.alive = true;
+
+    bulletList.push(this);
+  }
+  update() {
+    this.y -= 7;
+  }
+}
+
+class Monster {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
+  init(width) {
+    this.y = 0;
+    this.x = this.generateRandomPosX(0, width - 48);
+
+    monsterList.push(this);
+  }
+  generateRandomPosX(min, max) {
+    let randomNum = Math.floor(Math.random() * (max - min + 1));
+    return randomNum;
+  }
+}
+
+let game = null;
 $startScreen.addEventListener("submit", (event) => {
   event.preventDefault();
-  $name.textContent = event.target["name-input"].value;
-  changeScreen("game");
-
-  loadImage();
-  setupKeyboardListener();
-  main();
+  const name = event.target["name-input"].value;
+  game = new Game(name);
 });
