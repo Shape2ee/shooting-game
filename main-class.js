@@ -1,6 +1,7 @@
 const $startScreen = document.querySelector("#start-screen");
 const $canvasScreen = document.querySelector("#canvas-screen");
 const $name = document.querySelector("#name");
+let keysDown = {};
 
 class Game {
   constructor(name) {
@@ -22,6 +23,7 @@ class Game {
       this.canvas.height - 64
     );
 
+    this.keyEvent();
     this.main();
   }
   changeScreen(screen) {
@@ -32,6 +34,11 @@ class Game {
       $startScreen.style.display = "none";
       $canvasScreen.style.display = "block";
     }
+  }
+  main() {
+    this.update();
+    this.renderImage();
+    requestAnimationFrame(() => this.main());
   }
   loadImage() {
     this.backgroundImage = new Image();
@@ -57,10 +64,28 @@ class Game {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
   }
+  keyEvent() {
+    document.addEventListener("keydown", (evnet) => {
+      keysDown[evnet.key] = true;
+      // console.log(keysDown);
+    });
 
-  main() {
-    this.renderImage();
-    requestAnimationFrame(() => this.main());
+    document.addEventListener("keyup", (event) => {
+      delete keysDown[event.key];
+      // console.log(keysDown);
+    });
+  }
+  update() {
+    const { spaceShip } = this;
+    if ("ArrowRight" in keysDown) {
+      spaceShip.x += 3;
+      // right
+    }
+
+    if ("ArrowLeft" in keysDown) {
+      spaceShip.x -= 3;
+      // left
+    }
   }
 }
 
