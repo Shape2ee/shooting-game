@@ -3,6 +3,7 @@ const $canvasScreen = document.querySelector("#canvas-screen");
 const $name = document.querySelector("#name");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
+let monsterList = [];
 
 class Game {
   constructor(name) {
@@ -25,6 +26,7 @@ class Game {
     );
 
     this.keyEvent();
+    this.createMonster();
     this.main();
   }
   changeScreen(screen) {
@@ -69,6 +71,10 @@ class Game {
       if (bulletList[i].alive) {
         ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
       }
+    }
+
+    for (let i = 0; i < monsterList.length; i++) {
+      ctx.drawImage(this.monsterImage, monsterList[i].x, monsterList[i].y);
     }
   }
   keyEvent() {
@@ -120,6 +126,12 @@ class Game {
 
     console.log(b, bulletList);
   }
+  createMonster() {
+    const interval = setInterval(() => {
+      let monster = new Monster();
+      monster.init(this.canvas.width);
+    }, 1000);
+  }
 }
 
 class SpaceShip {
@@ -130,7 +142,7 @@ class SpaceShip {
     this.x = x;
     this.y = y;
   }
-  getScore(score) {
+  levelUp(score) {
     this.score = score;
     if (this.score >= this.lev * 10) {
       this.lev += 1;
@@ -152,6 +164,23 @@ class Bullet {
   }
   update() {
     this.y -= 7;
+  }
+}
+
+class Monster {
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
+  init(width) {
+    this.y = 0;
+    this.x = this.generateRandomPosX(0, width - 48);
+
+    monsterList.push(this);
+  }
+  generateRandomPosX(min, max) {
+    let randomNum = Math.floor(Math.random() * (max - min + 1));
+    return randomNum;
   }
 }
 
