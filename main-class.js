@@ -1,9 +1,12 @@
 const $startScreen = document.querySelector("#start-screen");
 const $canvasScreen = document.querySelector("#canvas-screen");
+const $gameOver = document.querySelector("#game-over");
 const $name = document.querySelector("#name");
+const $replayBtn = document.querySelector("#replay-btn");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
+let gameOver = false;
 
 class Game {
   constructor(name) {
@@ -29,16 +32,28 @@ class Game {
     this.createMonster();
     this.main();
   }
+  quit() {
+    this.changeScreen("start");
+  }
   changeScreen(screen) {
     if (screen === "start") {
       $startScreen.style.display = "block";
       $canvasScreen.style.display = "none";
+      $gameOver.style.display = "none";
     } else if (screen === "game") {
       $startScreen.style.display = "none";
       $canvasScreen.style.display = "block";
+      $gameOver.style.display = "none";
+    } else if (screen === "gameOver") {
+      $gameOver.style.display = "block";
     }
   }
   main() {
+    if (gameOver) {
+      this.changeScreen("gameOver");
+      return;
+    }
+
     this.update();
     this.renderImage();
     requestAnimationFrame(() => this.main());
@@ -118,6 +133,10 @@ class Game {
         bulletList.splice(i, 1);
       }
     }
+
+    for (let i = 0; i < monsterList.length; i++) {
+      monsterList[i].update(this.canvas.width);
+    }
   }
   createBullet() {
     const { spaceShip } = this;
@@ -181,6 +200,13 @@ class Monster {
   generateRandomPosX(min, max) {
     let randomNum = Math.floor(Math.random() * (max - min + 1));
     return randomNum;
+  }
+  update(canvasWidth) {
+    this.y += 3;
+
+    if (this.y >= canvasWidth) {
+      gameOver = true;
+    }
   }
 }
 
