@@ -11,6 +11,7 @@ let monsterList = [];
 let records = [];
 let rankList = [];
 let score = 0;
+let interval;
 let gameOver = false;
 const getRankList = localStorage.getItem("rank");
 
@@ -29,18 +30,26 @@ class Game {
     this.loadImage();
 
     this.spaceShip = new SpaceShip(
+      this,
       name,
       this.canvas.width / 2 - 32,
       this.canvas.height - 64
     );
-
-    this.getRank();
 
     this.keyEvent();
     this.createMonster();
     this.main();
   }
   quit() {
+    clearInterval(interval);
+    score = 0;
+    gameOver = false;
+    bulletList = [];
+    monsterList = [];
+    records = [];
+    rankList = [];
+    this.spaceShip = null;
+    game = null;
     this.changeScreen("start");
   }
   changeScreen(screen) {
@@ -60,6 +69,8 @@ class Game {
     if (gameOver) {
       this.changeScreen("gameOver");
       this.saveRank();
+
+      $replayBtn.addEventListener("click", () => this.quit());
       return;
     }
 
@@ -144,18 +155,22 @@ class Game {
     }
 
     for (let i = 0; i < monsterList.length; i++) {
-      monsterList[i].update(this.canvas.height);
+      monsterList[i].update(spaceShip.lev, this.canvas.height);
     }
+
+    // 레벨 체크
+    spaceShip.update();
   }
   createBullet() {
     const { spaceShip } = this;
     let b = new Bullet();
     b.init(spaceShip.x, spaceShip.y);
+    console.log(spaceShip);
 
     console.log(b, bulletList);
   }
   createMonster() {
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       let monster = new Monster();
       monster.init(this.canvas.width);
     }, 1000);
@@ -175,11 +190,17 @@ class Game {
 }
 
 class SpaceShip {
-  constructor(name, x, y) {
+  constructor(game, name, x, y) {
+    this.game = game;
     this.name = name;
     this.lev = 1;
     this.x = x;
     this.y = y;
+  }
+  update() {
+    if (score >= this.lev * 15) {
+      this.lev += 1;
+    }
   }
 }
 
@@ -232,12 +253,22 @@ class Monster {
     let randomNum = Math.floor(Math.random() * (max - min + 1));
     return randomNum;
   }
-  update(canvasHeight) {
-    this.y += 1;
+  update(level, canvasHeight) {
+    this.y += level / 2;
 
     if (this.y >= canvasHeight) {
       gameOver = true;
     }
+  }
+}
+
+function getRank() {
+  const parsedRank = JSON.parse(getRankList);
+  records = parsedRank;
+
+  if (records === null) {
+    records = [];
+    return;
   }
 }
 
@@ -247,13 +278,7 @@ $rankBtn.addEventListener("click", () => {
   }
 
   $rank.innerHTML = "";
-  const parsedRank = JSON.parse(getRankList);
-  records = parsedRank;
-
-  if (records === null) {
-    records = [];
-    return;
-  }
+  getRank();
 
   const $rankList = document.createElement("ul");
   $rankList.className = "rank-list";
@@ -274,4 +299,5 @@ $startScreen.addEventListener("submit", (event) => {
   event.preventDefault();
   const name = event.target["name-input"].value;
   game = new Game(name);
+  getRank();
 });
