@@ -18,21 +18,38 @@
         display: flex;
         justify-content: center;
       }
+
+      #wrapper {
+        position: relative;
+      }
+
+      #game-over {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      #game-over img {
+        width: 320px;
+        height: 320px;
+      }
     </style>
   </head>
   <body>
     <h1>Shooting GAME!</h1>
-    <form id="start-screen">
-      <input id="name-input" placeholder="주인공 이름을 입력하세요!" />
-      <button id="game-btn">게임시작</button>
-    </form>
-    <div id="canvas-screen" style="display: none">
-      <div id="name"></div>
-      <canvas></canvas>
-    </div>
-    <div id="game-over" style="display: none">
-      <img src="./images/gameover.png" alt="게임오버" />
-      <button id="replay-btn">다시하기</button>
+    <div id="wrapper">
+      <form id="start-screen">
+        <input id="name-input" placeholder="주인공 이름을 입력하세요!" />
+        <button id="game-btn">게임시작</button>
+      </form>
+      <div id="canvas-screen" style="display: none">
+        <div id="name"></div>
+        <canvas></canvas>
+      </div>
+      <div id="game-over" style="display: none">
+        <img src="./images/gameover.png" alt="게임오버" />
+        <button id="replay-btn">다시하기</button>
+      </div>
     </div>
     <!-- <script src="./main.js"></script> -->
     <script src="./main-class.js"></script>

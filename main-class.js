@@ -6,6 +6,7 @@ const $replayBtn = document.querySelector("#replay-btn");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
+let score = 0;
 let gameOver = false;
 
 class Game {
@@ -78,7 +79,7 @@ class Game {
     const { ctx, spaceShip, canvas } = this;
     ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
-    ctx.fillText(`Score:${spaceShip.score}`, 20, 30);
+    ctx.fillText(`Score:${score}`, 20, 30);
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
 
@@ -128,14 +129,14 @@ class Game {
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
         bulletList[i].update();
-        // bulletList[i].checkHit();
+        bulletList[i].checkHit();
       } else {
         bulletList.splice(i, 1);
       }
     }
 
     for (let i = 0; i < monsterList.length; i++) {
-      monsterList[i].update(this.canvas.width);
+      monsterList[i].update(this.canvas.height);
     }
   }
   createBullet() {
@@ -157,15 +158,8 @@ class SpaceShip {
   constructor(name, x, y) {
     this.name = name;
     this.lev = 1;
-    this.score = 0;
     this.x = x;
     this.y = y;
-  }
-  levelUp(score) {
-    this.score = score;
-    if (this.score >= this.lev * 10) {
-      this.lev += 1;
-    }
   }
 }
 
@@ -184,6 +178,19 @@ class Bullet {
   update() {
     this.y -= 7;
   }
+  checkHit() {
+    for (let i = 0; i < monsterList.length; i++) {
+      if (
+        this.y <= monsterList[i].y &&
+        this.x >= monsterList[i].x &&
+        this.x <= monsterList[i].x + 48
+      ) {
+        score += 1;
+        this.alive = false;
+        monsterList.splice(i, 1);
+      }
+    }
+  }
 }
 
 class Monster {
@@ -201,10 +208,10 @@ class Monster {
     let randomNum = Math.floor(Math.random() * (max - min + 1));
     return randomNum;
   }
-  update(canvasWidth) {
-    this.y += 3;
+  update(canvasHeight) {
+    this.y += 1;
 
-    if (this.y >= canvasWidth) {
+    if (this.y >= canvasHeight) {
       gameOver = true;
     }
   }
