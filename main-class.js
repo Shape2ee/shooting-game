@@ -3,9 +3,12 @@ const $canvasScreen = document.querySelector("#canvas-screen");
 const $gameOver = document.querySelector("#game-over");
 const $name = document.querySelector("#name");
 const $replayBtn = document.querySelector("#replay-btn");
+const $rank = document.querySelector("#rank");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
+const records = [];
+let rankList = [];
 let score = 0;
 let gameOver = false;
 
@@ -52,6 +55,7 @@ class Game {
   main() {
     if (gameOver) {
       this.changeScreen("gameOver");
+      this.saveRank();
       return;
     }
 
@@ -152,6 +156,22 @@ class Game {
       monster.init(this.canvas.width);
     }, 1000);
   }
+  saveRank() {
+    const { spaceShip } = this;
+    const $rankList = document.createElement("ul");
+    $rankList.className = "rank-list";
+
+    records.push(`${spaceShip.name} : ${score}`);
+    rankList = records.sort((a, b) => a - b).slice(0, 5);
+    rankList.forEach((ranker, index) => {
+      const $ranker = document.createElement("li");
+      $ranker.className = "ranker";
+      $ranker.textContent = `${index + 1}.${ranker}`;
+      $rankList.appendChild($ranker);
+    });
+
+    $rank.appendChild($rankList);
+  }
 }
 
 class SpaceShip {
@@ -177,6 +197,10 @@ class Bullet {
   }
   update() {
     this.y -= 7;
+
+    if (this.y < 0) {
+      this.alive = false;
+    }
   }
   checkHit() {
     for (let i = 0; i < monsterList.length; i++) {
