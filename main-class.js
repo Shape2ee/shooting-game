@@ -4,13 +4,15 @@ const $gameOver = document.querySelector("#game-over");
 const $name = document.querySelector("#name");
 const $replayBtn = document.querySelector("#replay-btn");
 const $rank = document.querySelector("#rank");
+const $rankBtn = document.querySelector("#rank-btn");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
-const records = [];
+let records = [];
 let rankList = [];
 let score = 0;
 let gameOver = false;
+const getRankList = localStorage.getItem("rank");
 
 class Game {
   constructor(name) {
@@ -31,6 +33,8 @@ class Game {
       this.canvas.width / 2 - 32,
       this.canvas.height - 64
     );
+
+    this.getRank();
 
     this.keyEvent();
     this.createMonster();
@@ -158,19 +162,15 @@ class Game {
   }
   saveRank() {
     const { spaceShip } = this;
-    const $rankList = document.createElement("ul");
-    $rankList.className = "rank-list";
 
-    records.push(`${spaceShip.name} : ${score}`);
-    rankList = records.sort((a, b) => a - b).slice(0, 5);
-    rankList.forEach((ranker, index) => {
-      const $ranker = document.createElement("li");
-      $ranker.className = "ranker";
-      $ranker.textContent = `${index + 1}.${ranker}`;
-      $rankList.appendChild($ranker);
-    });
-
-    $rank.appendChild($rankList);
+    const current = {
+      name: spaceShip.name,
+      score: score,
+    };
+    records.push(current);
+    console.log(records);
+    rankList = records.sort((a, b) => b.score - a.score).slice(0, 5);
+    localStorage.setItem("rank", JSON.stringify(rankList));
   }
 }
 
@@ -240,6 +240,34 @@ class Monster {
     }
   }
 }
+
+$rankBtn.addEventListener("click", () => {
+  if (!localStorage.getItem("rank")) {
+    return;
+  }
+
+  $rank.innerHTML = "";
+  const parsedRank = JSON.parse(getRankList);
+  records = parsedRank;
+
+  if (records === null) {
+    records = [];
+    return;
+  }
+
+  const $rankList = document.createElement("ul");
+  $rankList.className = "rank-list";
+
+  records.forEach((ranker, index) => {
+    const $ranker = document.createElement("li");
+    $ranker.className = "rank-item";
+    $ranker.textContent = `${index + 1}. ${ranker.name} : ${ranker.score}점`;
+    $rankList.appendChild($ranker);
+  });
+
+  $rank.appendChild($rankList);
+  console.log("아아아");
+});
 
 let game = null;
 $startScreen.addEventListener("submit", (event) => {
