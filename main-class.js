@@ -27,7 +27,6 @@ class Game {
   start(name) {
     $name.textContent = name;
     this.changeScreen("game");
-    this.loadImage();
 
     this.spaceShip = new SpaceShip(
       this,
@@ -36,21 +35,24 @@ class Game {
       this.canvas.height - 64
     );
 
+    // console.log(game, this.spaceShip);
+    this.loadImage();
     this.keyEvent();
     this.createMonster();
     this.main();
   }
   quit() {
+    this.spaceShip = null;
     clearInterval(interval);
     score = 0;
-    gameOver = false;
     bulletList = [];
     monsterList = [];
     records = [];
     rankList = [];
-    this.spaceShip = null;
-    game = null;
     this.changeScreen("start");
+    game = null;
+    gameOver = false;
+    // console.log(game, this.spaceShip);
   }
   changeScreen(screen) {
     if (screen === "start") {
@@ -163,11 +165,9 @@ class Game {
   }
   createBullet() {
     const { spaceShip } = this;
+
     let b = new Bullet();
     b.init(spaceShip.x, spaceShip.y);
-    console.log(spaceShip);
-
-    console.log(b, bulletList);
   }
   createMonster() {
     interval = setInterval(() => {
@@ -183,7 +183,6 @@ class Game {
       score: score,
     };
     records.push(current);
-    console.log(records);
     rankList = records.sort((a, b) => b.score - a.score).slice(0, 5);
     localStorage.setItem("rank", JSON.stringify(rankList));
   }
@@ -227,11 +226,12 @@ class Bullet {
     for (let i = 0; i < monsterList.length; i++) {
       if (
         this.y <= monsterList[i].y &&
-        this.x >= monsterList[i].x &&
-        this.x <= monsterList[i].x + 48
+        this.x + 16 >= monsterList[i].x &&
+        this.x + 16 <= monsterList[i].x + 48
       ) {
         score += 1;
         this.alive = false;
+        // console.log(monsterList[i].x, monsterList[i].x + 48, this.x);
         monsterList.splice(i, 1);
       }
     }
