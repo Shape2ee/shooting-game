@@ -13,6 +13,7 @@ let rankList = [];
 let score = 0;
 let interval;
 let gameOver = false;
+let clickable = true;
 const getRankList = localStorage.getItem("rank");
 
 class Game {
@@ -256,7 +257,7 @@ class Monster {
   update(level, canvasHeight) {
     this.y += level / 2;
 
-    if (this.y >= canvasHeight) {
+    if (this.y + 36 >= canvasHeight) {
       gameOver = true;
     }
   }
@@ -267,30 +268,32 @@ function getRank() {
   records = parsedRank;
 
   if (records === null) {
-    records = [];
     return;
   }
 }
 
 $rankBtn.addEventListener("click", () => {
-  if (!localStorage.getItem("rank")) {
+  if (!localStorage.getItem("rank") || !clickable) {
     return;
   }
 
   $rank.innerHTML = "";
-  getRank();
+  clickable = false;
+  setTimeout(() => {
+    getRank();
+    const $rankList = document.createElement("ul");
+    $rankList.className = "rank-list";
 
-  const $rankList = document.createElement("ul");
-  $rankList.className = "rank-list";
+    records.forEach((ranker, index) => {
+      const $ranker = document.createElement("li");
+      $ranker.className = "rank-item";
+      $ranker.textContent = `${index + 1}. ${ranker.name} : ${ranker.score}점`;
+      $rankList.appendChild($ranker);
+      clickable = true;
+    });
 
-  records.forEach((ranker, index) => {
-    const $ranker = document.createElement("li");
-    $ranker.className = "rank-item";
-    $ranker.textContent = `${index + 1}. ${ranker.name} : ${ranker.score}점`;
-    $rankList.appendChild($ranker);
-  });
-
-  $rank.appendChild($rankList);
+    $rank.appendChild($rankList);
+  }, 500);
   console.log("아아아");
 });
 
