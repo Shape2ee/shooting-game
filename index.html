@@ -5,50 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>자바스크립트-슈팅게임</title>
-    <style>
-      body {
-        margin: 0;
-      }
-
-      h1 {
-        text-align: center;
-      }
-
-      .canvas-screen {
-        display: flex;
-        justify-content: center;
-      }
-
-      #wrapper {
-        position: relative;
-      }
-
-      #game-over {
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-
-      #game-over img {
-        width: 320px;
-        height: 320px;
-      }
-    </style>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1>Shooting GAME!</h1>
     <div id="wrapper">
       <form id="start-screen">
-        <input id="name-input" placeholder="주인공 이름을 입력하세요!" />
-        <button id="game-btn">게임시작</button>
+        <h1>Shooting GAME!</h1>
+        <input id="name-input" placeholder="우주선 이름을 입력하세요!" />
+        <button id="game-btn" class="btn">게임시작</button>
       </form>
       <div id="canvas-screen" style="display: none">
-        <div id="name"></div>
-        <canvas></canvas>
-      </div>
-      <div id="game-over" style="display: none">
-        <img src="./images/gameover.png" alt="게임오버" />
-        <button id="replay-btn">다시하기</button>
+        <canvas class="canvas"></canvas>
+        <div id="game-over" style="display: none">
+          <img src="./images/gameover.png" alt="게임오버" />
+          <button id="replay-btn" class="btn">다시하기</button>
+        </div>
       </div>
       <button id="rank-btn">랭킹보기</button>
       <div id="rank"></div>

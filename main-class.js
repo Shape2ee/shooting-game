@@ -21,19 +21,18 @@ class Game {
     this.canvas = document.querySelector("canvas");
     this.ctx = this.canvas.getContext("2d");
     this.canvas.width = 400;
-    this.canvas.height = window.innerHeight - 150;
+    this.canvas.height = window.innerHeight;
 
     this.start(name);
   }
   start(name) {
-    $name.textContent = name;
     this.changeScreen("game");
 
     this.spaceShip = new SpaceShip(
       this,
       name,
       this.canvas.width / 2 - 32,
-      this.canvas.height - 64
+      this.canvas.height - 84 // 우주선 크기 & 바닥 공간 20
     );
 
     // console.log(game, this.spaceShip);
@@ -57,15 +56,15 @@ class Game {
   }
   changeScreen(screen) {
     if (screen === "start") {
-      $startScreen.style.display = "block";
+      $startScreen.style.display = "flex";
       $canvasScreen.style.display = "none";
       $gameOver.style.display = "none";
     } else if (screen === "game") {
       $startScreen.style.display = "none";
-      $canvasScreen.style.display = "block";
+      $canvasScreen.style.display = "flex";
       $gameOver.style.display = "none";
     } else if (screen === "gameOver") {
-      $gameOver.style.display = "block";
+      $gameOver.style.display = "flex";
     }
   }
   main() {
@@ -101,9 +100,9 @@ class Game {
     const { ctx, spaceShip, canvas } = this;
     ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
-    ctx.fillText(`Score:${score}`, 20, 30);
+    ctx.fillText(`Name : ${spaceShip.name} Score : ${score}`, 20, 30);
     ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
+    ctx.font = "1rem Noto Sans KR";
 
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
@@ -184,7 +183,7 @@ class Game {
       score: score,
     };
     records.push(current);
-    rankList = records.sort((a, b) => b.score - a.score).slice(0, 5);
+    rankList = records.sort((a, b) => b.score - a.score).slice(0, 10);
     localStorage.setItem("rank", JSON.stringify(rankList));
   }
 }
@@ -257,7 +256,7 @@ class Monster {
   update(level, canvasHeight) {
     this.y += level / 2;
 
-    if (this.y + 36 >= canvasHeight) {
+    if (this.y + 48 >= canvasHeight) {
       gameOver = true;
     }
   }
