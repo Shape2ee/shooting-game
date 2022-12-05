@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>자바스크립트-슈팅게임</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./css/minireset.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <div id="wrapper">
-      <form id="start-screen">
-        <h1>Shooting GAME!</h1>
-        <input id="name-input" placeholder="우주선 이름을 입력하세요!" />
+      <div id="start-screen">
+        <h1 class="logo">Shooting GAME!</h1>
         <button id="game-btn" class="btn">게임시작</button>
-      </form>
+        <button id="rank-btn" class="btn rank-btn">랭킹보기</button>
+      </div>
       <div id="canvas-screen" style="display: none">
         <canvas class="canvas"></canvas>
         <div id="game-over" style="display: none">
@@ -21,7 +22,7 @@
           <button id="replay-btn" class="btn">다시하기</button>
         </div>
       </div>
-      <button id="rank-btn">랭킹보기</button>
+      <!-- <a href="https://kr.freepik.com/free-vector/space-background-with-planet-landscape_13643566.htm#query=%EC%9A%B0%EC%A3%BC%EC%84%A0&position=12&from_view=search&track=sph">작가 upklyak</a> 출처 Freepik -->
       <div id="rank"></div>
     </div>
     <!-- <script src="./main.js"></script> -->

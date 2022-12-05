@@ -21,10 +21,15 @@ h1 {
 #start-screen {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-end;
   align-items: center;
   position: relative;
   height: 100%;
+}
+
+#start-screen .logo {
+  margin-top: 10vh;
+  margin-bottom: auto;
 }
 
 #start-screen #name-input {
@@ -34,7 +39,8 @@ h1 {
 }
 
 .btn {
-  width: 120px;
+  margin-bottom: 20px;
+  width: 200px;
   height: 40px;
   border-radius: 20px;
   border: none;
@@ -43,6 +49,10 @@ h1 {
 
 .btn:hover {
   background-color: aqua;
+}
+
+#start-screen .rank-btn {
+  margin-bottom: 10vh;
 }
 
 #game-over {
@@ -64,15 +74,4 @@ h1 {
 
 #canvas-screen {
   justify-content: center;
-}
-
-#rank-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  background-color: blue;
-  border: none;
-  border-radius: 50%;
 }

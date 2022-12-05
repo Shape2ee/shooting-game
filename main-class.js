@@ -1,10 +1,10 @@
 const $startScreen = document.querySelector("#start-screen");
+const $gameBtn = document.querySelector("#game-btn");
+const $rankBtn = document.querySelector("#rank-btn");
 const $canvasScreen = document.querySelector("#canvas-screen");
 const $gameOver = document.querySelector("#game-over");
-const $name = document.querySelector("#name");
 const $replayBtn = document.querySelector("#replay-btn");
 const $rank = document.querySelector("#rank");
-const $rankBtn = document.querySelector("#rank-btn");
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
@@ -17,20 +17,19 @@ let clickable = true;
 const getRankList = localStorage.getItem("rank");
 
 class Game {
-  constructor(name) {
+  constructor() {
     this.canvas = document.querySelector("canvas");
     this.ctx = this.canvas.getContext("2d");
     this.canvas.width = 400;
     this.canvas.height = window.innerHeight;
 
-    this.start(name);
+    this.start();
   }
-  start(name) {
+  start() {
     this.changeScreen("game");
 
     this.spaceShip = new SpaceShip(
       this,
-      name,
       this.canvas.width / 2 - 32,
       this.canvas.height - 84 // 우주선 크기 & 바닥 공간 20
     );
@@ -98,11 +97,17 @@ class Game {
   }
   renderImage() {
     const { ctx, spaceShip, canvas } = this;
-    ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(
+      this.backgroundImage.frame[0],
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
-    ctx.fillText(`Name : ${spaceShip.name} Score : ${score}`, 20, 30);
+    ctx.fillText(`Score : ${score}`, 20, 30);
     ctx.fillStyle = "white";
-    ctx.font = "1rem Noto Sans KR";
+    ctx.font = "1rem 맑은 고딕";
 
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
@@ -178,20 +183,16 @@ class Game {
   saveRank() {
     const { spaceShip } = this;
 
-    const current = {
-      name: spaceShip.name,
-      score: score,
-    };
+    const current = score;
     records.push(current);
-    rankList = records.sort((a, b) => b.score - a.score).slice(0, 10);
+    rankList = records.sort((a, b) => b - a).slice(0, 10);
     localStorage.setItem("rank", JSON.stringify(rankList));
   }
 }
 
 class SpaceShip {
-  constructor(game, name, x, y) {
+  constructor(game, x, y) {
     this.game = game;
-    this.name = name;
     this.lev = 1;
     this.x = x;
     this.y = y;
@@ -286,7 +287,7 @@ $rankBtn.addEventListener("click", () => {
     records.forEach((ranker, index) => {
       const $ranker = document.createElement("li");
       $ranker.className = "rank-item";
-      $ranker.textContent = `${index + 1}. ${ranker.name} : ${ranker.score}점`;
+      $ranker.textContent = `${index + 1}. ${ranker.score}점`;
       $rankList.appendChild($ranker);
       clickable = true;
     });
@@ -297,9 +298,7 @@ $rankBtn.addEventListener("click", () => {
 });
 
 let game = null;
-$startScreen.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const name = event.target["name-input"].value;
-  game = new Game(name);
+$gameBtn.addEventListener("click", (event) => {
+  game = new Game();
   getRank();
 });
