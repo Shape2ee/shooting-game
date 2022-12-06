@@ -97,13 +97,7 @@ class Game {
   }
   renderImage() {
     const { ctx, spaceShip, canvas } = this;
-    ctx.drawImage(
-      this.backgroundImage.frame[0],
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+    ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
     ctx.fillText(`Score : ${score}`, 20, 30);
     ctx.fillStyle = "white";
