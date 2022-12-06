@@ -268,6 +268,7 @@ function getRank() {
 
 $rankBtn.addEventListener("click", () => {
   if (!localStorage.getItem("rank") || !clickable) {
+    alert("현재 랭킹에 등록된 것이 없습니다!");
     return;
   }
 
