@@ -61,6 +61,11 @@ h1 {
   background-color: aqua;
 }
 
+.btn-wrap {
+  display: flex;
+  justify-content: center;
+}
+
 #game-over {
   flex-direction: column;
   justify-content: center;
@@ -70,7 +75,7 @@ h1 {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
-  height: 100%;
+  height: 1000%;
 }
 
 #game-over img {

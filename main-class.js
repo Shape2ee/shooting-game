@@ -54,7 +54,6 @@ class Game {
     rankList = [];
     gameOver = false;
   }
-
   changeScreen(screen) {
     if (screen === "start") {
       $startScreen.style.display = "flex";
@@ -70,9 +69,9 @@ class Game {
   }
   main() {
     if (gameOver) {
-      this.quit();
-      this.changeScreen("gameOver");
       this.saveRank();
+      this.changeScreen("gameOver");
+      this.quit();
 
       $replayBtn.addEventListener("click", () => this.changeScreen("start"))
       return;
@@ -86,14 +85,14 @@ class Game {
     this.backgroundImage = new Image();
     this.backgroundImage.src = "images/background.gif";
 
-    this.spaceShipImage = new Image();
-    this.spaceShipImage.src = "images/spaceship.png";
-
     this.bulletImage = new Image();
     this.bulletImage.src = "images/bullet.png";
+    
+    this.spaceShipImage = new Image();
+    this.spaceShipImage.src = "images/spaceShip.png";
 
     this.monsterImage = new Image();
-    this.monsterImage.src = "images/monster.png";
+    this.monsterImage.src = `images/meteor.png`;
 
     this.gameOverImage = new Image();
     this.gameOverImage.src = "images/gameover.png";
@@ -101,11 +100,7 @@ class Game {
   renderImage() {
     const { ctx, spaceShip, canvas } = this;
     ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
-    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
-    ctx.fillText(`Score : ${score}`, 20, 30);
-    ctx.fillStyle = "white";
-    ctx.font = "1rem 맑은 고딕";
-
+    
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
         ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
@@ -115,6 +110,11 @@ class Game {
     for (let i = 0; i < monsterList.length; i++) {
       ctx.drawImage(this.monsterImage, monsterList[i].x, monsterList[i].y);
     }
+
+    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+    ctx.fillText(`Score : ${score}`, 20, 30);
+    ctx.fillStyle = "white";
+    ctx.font = "1rem 맑은 고딕";
   }
   keyEvent() {
     if(!gameOver) {
@@ -133,7 +133,6 @@ class Game {
   onKeyDown = (event) => {
     keysDown[event.key] = true;
   }
-
   update() {
     const { spaceShip, bullet } = this;
     if ("ArrowRight" in keysDown) {
@@ -172,7 +171,6 @@ class Game {
     const { spaceShip } = this;
 
     let b = new Bullet();
-    console.log(spaceShip.x, spaceShip.y)
     b.init(spaceShip.x, spaceShip.y);
   }
   createMonster() {
@@ -185,7 +183,6 @@ class Game {
     const { spaceShip } = this;
 
     const current = score;
-    console.log(current, records)
     records.push(current);
     rankList = records.sort((a, b) => b - a).slice(0, 10);
     localStorage.setItem("rank", JSON.stringify(rankList));
@@ -207,17 +204,16 @@ class SpaceShip {
 }
 
 class Bullet {
-  // constructor() {
-  //   this.x = 0;
-  //   this.y = 0;
-  // }
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
   init(spaceShipX, spaceShipY) {
     this.x = spaceShipX + 16;
     this.y = spaceShipY;
     this.alive = true;
 
     bulletList.push(this);
-    console.log(bulletList)
   }
   update() {
     this.y -= 7;
@@ -258,8 +254,8 @@ class Monster {
     return randomNum;
   }
   update(level, canvasHeight) {
-    // this.y += level / 2;
-    this.y += 3;
+    this.y += level / 2;
+    // this.y += 3;
 
     if (this.y + 48 >= canvasHeight) {
       gameOver = true;
@@ -289,7 +285,7 @@ $rankBtn.addEventListener("click", () => {
     getRank();
     const $rankList = document.createElement("ul");
     $rankList.className = "rank-list";
-
+    console.log(records)
     records.forEach((ranker, index) => {
       const $ranker = document.createElement("li");
       $ranker.className = "rank-item";
