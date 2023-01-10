@@ -5,7 +5,11 @@ body {
 }
 
 h1 {
+  width: 400px;
+  height: 245px;
+  background: url(../images/title.svg) no-repeat center / cover;
   text-align: center;
+  text-indent: -9999px;
 }
 
 .canvas-screen {
@@ -32,7 +36,6 @@ h1 {
 #start-screen .logo {
   margin-bottom: auto;
   line-height: 4rem;
-  font-family: "Orbitron", sans-serif;
   font-size: 4rem;
   text-transform: uppercase;
   color: white;
@@ -49,16 +52,22 @@ h1 {
 }
 
 .btn {
-  margin-bottom: 20px;
+  margin: 0 10px 20px;
   width: 200px;
-  height: 40px;
-  border-radius: 20px;
-  border: none;
+  height: 60px;
+  background: #fff;
+	border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+  font-family: "Galmuri11", sans-serif;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 
 .btn:hover {
-  background-color: aqua;
+  background-color: #455eff;
+  color: #fff;
 }
 
 .btn-wrap {
