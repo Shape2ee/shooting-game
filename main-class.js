@@ -5,6 +5,7 @@ const $canvasScreen = document.querySelector("#canvas-screen");
 const $gameOver = document.querySelector("#game-over");
 const $replayBtn = document.querySelector("#replay-btn");
 const $rank = document.querySelector("#rank");
+let game = null;
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = [];
@@ -41,18 +42,19 @@ class Game {
     this.main();
   }
   quit() {
-    this.spaceShip = null;
     clearInterval(interval);
+    game = null;
+    this.spaceShip = null;
+    document.removeEventListener("keydown", this.onKeyDown);
+    document.removeEventListener("keyup", this.onKeyUp);
     score = 0;
     bulletList = [];
     monsterList = [];
     records = [];
     rankList = [];
-    this.changeScreen("start");
-    game = null;
     gameOver = false;
-    // console.log(game, this.spaceShip);
   }
+
   changeScreen(screen) {
     if (screen === "start") {
       $startScreen.style.display = "flex";
@@ -68,10 +70,11 @@ class Game {
   }
   main() {
     if (gameOver) {
+      this.quit();
       this.changeScreen("gameOver");
       this.saveRank();
 
-      $replayBtn.addEventListener("click", () => this.quit());
+      $replayBtn.addEventListener("click", () => this.changeScreen("start"))
       return;
     }
 
@@ -114,20 +117,23 @@ class Game {
     }
   }
   keyEvent() {
-    document.addEventListener("keydown", (evnet) => {
-      keysDown[evnet.key] = true;
-      // console.log(keysDown);
-    });
+    if(!gameOver) {
+      document.addEventListener("keydown", this.onKeyDown);
+      document.addEventListener("keyup", this.onKeyUp);
+    }
 
-    document.addEventListener("keyup", (event) => {
-      delete keysDown[event.key];
-      // console.log(keysDown);
-
-      if (event.key == " ") {
-        this.createBullet(); // 총알 생성
-      }
-    });
   }
+  onKeyUp = (event) => {
+    if (event.code === "Space") {
+      this.createBullet(); // 총알 생성
+    }
+
+    delete keysDown[event.key];
+  }
+  onKeyDown = (event) => {
+    keysDown[event.key] = true;
+  }
+
   update() {
     const { spaceShip, bullet } = this;
     if ("ArrowRight" in keysDown) {
@@ -166,6 +172,7 @@ class Game {
     const { spaceShip } = this;
 
     let b = new Bullet();
+    console.log(spaceShip.x, spaceShip.y)
     b.init(spaceShip.x, spaceShip.y);
   }
   createMonster() {
@@ -178,6 +185,7 @@ class Game {
     const { spaceShip } = this;
 
     const current = score;
+    console.log(current, records)
     records.push(current);
     rankList = records.sort((a, b) => b - a).slice(0, 10);
     localStorage.setItem("rank", JSON.stringify(rankList));
@@ -199,16 +207,17 @@ class SpaceShip {
 }
 
 class Bullet {
-  constructor() {
-    this.x = 0;
-    this.y = 0;
-  }
+  // constructor() {
+  //   this.x = 0;
+  //   this.y = 0;
+  // }
   init(spaceShipX, spaceShipY) {
     this.x = spaceShipX + 16;
     this.y = spaceShipY;
     this.alive = true;
 
     bulletList.push(this);
+    console.log(bulletList)
   }
   update() {
     this.y -= 7;
@@ -249,7 +258,8 @@ class Monster {
     return randomNum;
   }
   update(level, canvasHeight) {
-    this.y += level / 2;
+    // this.y += level / 2;
+    this.y += 3;
 
     if (this.y + 48 >= canvasHeight) {
       gameOver = true;
@@ -262,6 +272,7 @@ function getRank() {
   records = parsedRank;
 
   if (records === null) {
+    records = []
     return;
   }
 }
@@ -289,10 +300,9 @@ $rankBtn.addEventListener("click", () => {
 
     $rank.appendChild($rankList);
   }, 500);
-  console.log("아아아");
 });
 
-let game = null;
+
 $gameBtn.addEventListener("click", (event) => {
   game = new Game();
   getRank();
