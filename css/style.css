@@ -49,7 +49,7 @@ body {
   margin: 0 10px 20px;
   width: 200px;
   height: 60px;
-  background: #8039fe;
+  background: #2e135b;
   border: 6px ridge #fff;
 	/* border-bottom: 6px inset rgba(0,0,0,.5);
 	border-left: 6px inset rgba(0,0,0,.5);
@@ -62,7 +62,7 @@ body {
 }
 
 .btn:hover {
-  background-color: #455eff;
+  background-color: #8039fe;
 }
 
 .btn-wrap {
