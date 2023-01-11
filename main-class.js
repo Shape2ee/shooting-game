@@ -64,7 +64,7 @@ class Game {
       $canvasScreen.style.display = "flex";
       $gameOver.style.display = "none";
     } else if (screen === "gameOver") {
-      $gameOver.style.display = "flex";
+      $gameOver.style.display = "block";
     }
   }
   main() {
