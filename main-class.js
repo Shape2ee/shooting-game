@@ -1,9 +1,12 @@
 const $startScreen = document.querySelector("#start-screen");
+const $canvasScreen = document.querySelector("#canvas-screen");
+const $manualScreen = document.querySelector("#manual-screen");
 const $gameBtn = document.querySelector("#game-btn");
 const $rankBtn = document.querySelector("#rank-btn");
-const $canvasScreen = document.querySelector("#canvas-screen");
 const $gameOver = document.querySelector("#game-over");
 const $replayBtn = document.querySelector("#replay-btn");
+const $manualBtn = document.querySelector("#manual-btn");
+const $okBtn = document.querySelector(".ok_btn");
 const $rank = document.querySelector("#rank");
 let game = null;
 let keysDown = {};
@@ -21,7 +24,7 @@ class Game {
   constructor() {
     this.canvas = document.querySelector("canvas");
     this.ctx = this.canvas.getContext("2d");
-    this.canvas.width = 400;
+    this.canvas.width = 500;
     this.canvas.height = window.innerHeight;
 
     this.start();
@@ -298,8 +301,15 @@ $rankBtn.addEventListener("click", () => {
   }, 500);
 });
 
-
-$gameBtn.addEventListener("click", (event) => {
+$gameBtn.addEventListener("click", () => {
   game = new Game();
   getRank();
 });
+
+$manualBtn.addEventListener('click', () => {
+  $manualScreen.classList.add('on');
+})
+
+$okBtn.addEventListener('click', () => {
+  $manualScreen.classList.remove('on');
+})

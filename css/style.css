@@ -33,6 +33,10 @@ body {
   background-color: rgba(0,0,0,.5);
 }
 
+.block {
+  display: block;
+}
+
 #wrapper {
   position: relative;
   height: 100vh;
@@ -107,6 +111,7 @@ body {
 
 /****** menual-screen ******/
 #manual-screen {
+  display: none;
   position: absolute;
   top: 0;
   left: 0;
@@ -114,23 +119,25 @@ body {
   height: 100%;
 }
 
-#manual-screen .menual {
+#manual-screen.on {
+  display: block;
+}
+
+#manual-screen .manual {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding-top: 40px;
   width: 50%;
-  height: 50%;
   background: #fff;
   border: 10px ridge #fff;
 }
 
-
-#manual-screen .menual_title {
+#manual-screen .manual_title {
   position: absolute;
   top: -35px;
   left: 50%;
@@ -143,4 +150,20 @@ body {
   font-size: 1.5rem;
   line-height: 40px;
   color: #fff;
+}
+#manual-screen .manual_wrap {
+  margin: 20px 0 40px;
+}
+
+#manual-screen .btn.ok_btn {
+  margin: auto 0 20px;
+}
+
+#manual-screen .manual_keybox {
+  display: flex;
+  margin: 20px 0;
+}
+
+#manual-screen .manual_keybox p {
+  width: 100px;
 }
