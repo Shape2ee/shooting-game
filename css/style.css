@@ -2,6 +2,7 @@
 
 body {
   margin: 0;
+  font-family: "Galmuri11", sans-serif;
 }
 
 /****** 공통 ******/
@@ -125,4 +126,21 @@ body {
   width: 50%;
   height: 50%;
   background: #fff;
+  border: 10px ridge #fff;
+}
+
+
+#manual-screen .menual_title {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 60px;
+  width: 240px;
+  background: #8039fe;
+  border: 10px ridge #8039fe;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 40px;
+  color: #fff;
 }
