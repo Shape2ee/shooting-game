@@ -12,26 +12,28 @@
     <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <div id="wrapper">
-      <div id="start-screen">
-        <h1 class="logo">Shooting <span class="block">GAME!</span></h1>
-        <div class="btn-wrap">
-          <button id="manual-btn" class="btn manual">게임설명</button>
-          <button id="game-btn" class="btn">게임시작</button>
-          <button id="rank-btn" class="btn rank-btn">랭킹보기</button>
-        </div>
-      </div>
-      <div id="canvas-screen" style="display: none">
-        <canvas class="canvas"></canvas>
-        <div id="game-over" style="display: none">
-          <span class="bg"></span>
-          <div class="box">
-            <img src="./images/gameover.png" alt="게임오버" />
-            <button id="replay-btn" class="btn">처음으로</button>
+    <div class="wrapper">
+      <div id="start_screen">
+        <div class="start_wrap">
+          <h1 class="logo">Shooting <span class="block">GAME!</span></h1>
+          <div class="btn_wrap">
+            <button class="btn manual_btn">게임설명</button>
+            <button class="btn game_btn">게임시작</button>
+            <button class="btn rank_btn">랭킹보기</button>
           </div>
         </div>
       </div>
-      <div id="manual-screen">
+      <div id="canvas_screen" style="display: none">
+        <canvas class="canvas"></canvas>
+        <div class="game_over" style="display: none">
+          <span class="bg"></span>
+          <div class="game_over_box">
+            <img src="./images/gameover.png" alt="게임오버" />
+            <button class="btn replay_btn">처음으로</button>
+          </div>
+        </div>
+      </div>
+      <div id="manual_screen">
         <div class="manual">
           <h2 class="manual_title">게임설명서</h2>
           <div class="manual_wrap">
