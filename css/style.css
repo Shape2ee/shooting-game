@@ -4,47 +4,7 @@ body {
   margin: 0;
 }
 
-.canvas-screen {
-  display: flex;
-  justify-content: center;
-}
-
-#wrapper {
-  position: relative;
-  height: 100vh;
-  background: url(../images/space-background.jpg) no-repeat 50% 50% / cover;
-}
-
-#start-screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  position: relative;
-  padding: 15vh 0;
-  height: 100%;
-}
-
-#start-screen h1 {
-  margin-bottom: auto;
-  width: 100%;
-  height: 300px;
-  background: url(../images/title.svg) no-repeat center / contain;
-  text-align: center;
-  text-indent: -9999px;
-}
-
-
-#start-screen .logo span.block {
-  display: block;
-}
-
-#start-screen #name-input {
-  width: 60%;
-  height: 40px;
-  text-align: center;
-}
-
+/****** 공통 ******/
 .btn {
   margin: 0 10px 20px;
   width: 200px;
@@ -65,11 +25,60 @@ body {
   background-color: #8039fe;
 }
 
-.btn-wrap {
+.bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+}
+
+#wrapper {
+  position: relative;
+  height: 100vh;
+  background: url(../images/space-background.jpg) no-repeat 50% 50% / cover;
+}
+
+/****** start-screen ******/
+#start-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  padding: 15vh 0;
+  height: 100%;
+}
+
+#start-screen h1 {
+  margin-bottom: auto;
+  width: 100%;
+  height: 300px;
+  background: url(../images/title.svg) no-repeat center / contain;
+  text-align: center;
+  text-indent: -9999px;
+}
+
+#start-screen .logo span.block {
+  display: block;
+}
+
+#start-screen #name-input {
+  width: 60%;
+  height: 40px;
+  text-align: center;
+}
+
+#start-screen .btn-wrap {
   display: flex;
   justify-content: center;
 }
 
+/****** canvas-screen ******/
+#canvas-screen {
+  justify-content: center;
+}
+
+/****** game-over ******/
 #game-over {
   position: absolute;
   top: 0;
@@ -95,13 +104,25 @@ body {
   height: 100%;
 }
 
-#game-over .bg {
-  display: block;
+/****** menual-screen ******/
+#manual-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,.5);
 }
 
-#canvas-screen {
+#manual-screen .menual {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 50%;
+  background: #fff;
 }
