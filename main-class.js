@@ -1,24 +1,19 @@
 const $startScreen = document.querySelector("#start_screen");
 const $canvasScreen = document.querySelector("#canvas_screen");
 const $manualScreen = document.querySelector("#manual_screen");
-const $gameBtn = document.querySelector(".game_btn");
-const $rankBtn = document.querySelector(".rank_btn");
 const $gameOver = document.querySelector(".game_over");
+const $gameBtn = document.querySelector(".game_btn");
 const $replayBtn = document.querySelector(".replay_btn");
 const $manualBtn = document.querySelector(".manual_btn");
 const $okBtn = document.querySelector(".ok_btn");
-const $rank = document.querySelector(".rank");
 let game = null;
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
 let monsterList = []; // 몬스터 리스트
-let records = [];
-let rankList = [];
 let score = 0; 
 let interval;
 let gameOver = false;
 let clickable = true;
-const getRankList = localStorage.getItem("rank");
 
 class Game {
   constructor() {
@@ -182,14 +177,6 @@ class Game {
       monster.init(this.canvas.width);
     }, 1000);
   }
-  saveRank() {
-    const { spaceShip } = this;
-
-    const current = score;
-    records.push(current);
-    rankList = records.sort((a, b) => b - a).slice(0, 10);
-    localStorage.setItem("rank", JSON.stringify(rankList));
-  }
 }
 
 class SpaceShip {
@@ -265,41 +252,6 @@ class Monster {
     }
   }
 }
-
-function getRank() {
-  const parsedRank = JSON.parse(getRankList);
-  records = parsedRank;
-
-  if (records === null) {
-    records = []
-    return;
-  }
-}
-
-$rankBtn.addEventListener("click", () => {
-  if (!localStorage.getItem("rank") || !clickable) {
-    alert("현재 랭킹에 등록된 것이 없습니다!");
-    return;
-  }
-
-  $rank.innerHTML = "";
-  clickable = false;
-  setTimeout(() => {
-    getRank();
-    const $rankList = document.createElement("ul");
-    $rankList.className = "rank-list";
-    console.log(records)
-    records.forEach((ranker, index) => {
-      const $ranker = document.createElement("li");
-      $ranker.className = "rank-item";
-      $ranker.textContent = `${index + 1}. ${ranker.score}점`;
-      $rankList.appendChild($ranker);
-      clickable = true;
-    });
-
-    $rank.appendChild($rankList);
-  }, 500);
-});
 
 $gameBtn.addEventListener("click", () => {
   game = new Game();
