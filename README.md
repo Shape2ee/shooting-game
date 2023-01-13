@@ -1,6 +1,6 @@
 # Retor-Style Space Shooting Game
 
-![picture alt](https://shape2ee.github.io/shooting-gmae/images/readme_image.png "Retor-Style Space Shooting Game")
+![picture alt](https://shape2ee.github.io/shooting-game/images/readme_image.png "Retor-Style Space Shooting Game")
 
 ## 🎮 Play
 [Play the Game](https://shape2ee.github.io/shooting-game/)
