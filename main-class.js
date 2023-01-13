@@ -33,7 +33,6 @@ class Game {
       this.canvas.height - 84 // 우주선 크기 & 바닥 공간 20
     );
 
-    // console.log(game, this.spaceShip);
     this.loadImage();
     this.keyEvent();
     this.createMonster();
@@ -48,9 +47,8 @@ class Game {
     score = 0;
     bulletList = [];
     monsterList = [];
-    records = [];
-    rankList = [];
     gameOver = false;
+    keysDown = []
   }
   changeScreen(screen) {
     if (screen === "start") {
@@ -67,7 +65,6 @@ class Game {
   }
   main() {
     if (gameOver) {
-      this.saveRank();
       this.changeScreen("gameOver");
       this.quit();
 
@@ -105,11 +102,12 @@ class Game {
       }
     }
 
+    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+
     for (let i = 0; i < monsterList.length; i++) {
       ctx.drawImage(this.monsterImage, monsterList[i].x, monsterList[i].y);
     }
 
-    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
     ctx.fillText(`Score : ${score}`, 20, 30);
     ctx.fillStyle = "white";
     ctx.font = "1rem 맑은 고딕";
@@ -119,7 +117,6 @@ class Game {
       document.addEventListener("keydown", this.onKeyDown);
       document.addEventListener("keyup", this.onKeyUp);
     }
-
   }
   onKeyUp = (event) => {
     if (event.code === "Space") {
@@ -143,6 +140,16 @@ class Game {
       // left
     }
 
+    if ("ArrowUp" in keysDown) {
+      spaceShip.y -= 4;
+      // right
+    }
+
+    if ("ArrowDown" in keysDown) {
+      spaceShip.y += 4;
+      // left
+    }
+
     if (spaceShip.x <= 0) {
       spaceShip.x = 0;
     } else if (spaceShip.x >= this.canvas.width - 64) {
@@ -159,7 +166,7 @@ class Game {
     }
 
     for (let i = 0; i < monsterList.length; i++) {
-      monsterList[i].update(spaceShip.lev, this.canvas.height);
+      monsterList[i].update(spaceShip, this.canvas.height);
     }
 
     // 레벨 체크
@@ -169,7 +176,7 @@ class Game {
     const { spaceShip } = this;
 
     let b = new Bullet();
-    b.init(spaceShip.x, spaceShip.y);
+    b.init(spaceShip);
   }
   createMonster() {
     interval = setInterval(() => {
@@ -198,9 +205,9 @@ class Bullet {
     this.x = 0;
     this.y = 0;
   }
-  init(spaceShipX, spaceShipY) {
-    this.x = spaceShipX + 16;
-    this.y = spaceShipY;
+  init(spaceShip) {
+    this.x = spaceShip.x + 12.5;
+    this.y = spaceShip.y;
     this.alive = true;
 
     bulletList.push(this);
@@ -210,7 +217,7 @@ class Bullet {
 
     if (this.y < 0) {
       this.alive = false;
-    }
+    }  
   }
   checkHit() {
     for (let i = 0; i < monsterList.length; i++) {
@@ -221,7 +228,6 @@ class Bullet {
       ) {
         score += 1;
         this.alive = false;
-        // console.log(monsterList[i].x, monsterList[i].x + 48, this.x);
         monsterList.splice(i, 1);
       }
     }
@@ -243,19 +249,27 @@ class Monster {
     let randomNum = Math.floor(Math.random() * (max - min + 1));
     return randomNum;
   }
-  update(level, canvasHeight) {
-    this.y += level / 2;
+  update(spaceShip, canvasHeight) {
+    this.y += spaceShip.lev / 2;
     // this.y += 3;
 
     if (this.y + 48 >= canvasHeight) {
       gameOver = true;
+    }
+
+    if (this.x >= spaceShip.x
+        && this.x <= spaceShip.x + 57
+        || this.x + 48 >= spaceShip.x
+        && this.x + 48 <= spaceShip.x + 57) {
+      if (this.y + 24 >= spaceShip.y) {
+        gameOver = true;
+      }
     }
   }
 }
 
 $gameBtn.addEventListener("click", () => {
   game = new Game();
-  getRank();
 });
 
 $manualBtn.addEventListener('click', () => {
