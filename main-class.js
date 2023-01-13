@@ -78,19 +78,19 @@ class Game {
   }
   loadImage() {
     this.backgroundImage = new Image();
-    this.backgroundImage.src = "images/background.gif";
+    this.backgroundImage.src = "./images/background.gif";
 
     this.bulletImage = new Image();
-    this.bulletImage.src = "images/bullet.png";
+    this.bulletImage.src = "./images/bullet.png";
     
     this.spaceShipImage = new Image();
-    this.spaceShipImage.src = "images/spaceShip.png";
+    this.spaceShipImage.src = "./images/space-ship.png";
 
     this.monsterImage = new Image();
-    this.monsterImage.src = `images/meteor.png`;
+    this.monsterImage.src = `./images/meteor.png`;
 
     this.gameOverImage = new Image();
-    this.gameOverImage.src = "images/gameover.png";
+    this.gameOverImage.src = "./images/gameover.png";
   }
   renderImage() {
     const { ctx, spaceShip, canvas } = this;
