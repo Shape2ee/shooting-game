@@ -7,7 +7,7 @@
 
 ## 🕹 Controls
 - ↑↓←→ : Move the ship
-- space: Fire a missile
+- Space: Fire a missile
 
 ## 🖥 Motivation
 이 프로젝트는 Youtube '코딩알려주는 누나'의 강의를 보고 따라서 만들어보면 재밌겠다 싶어서 처음은 시작하게 되었습니다.
