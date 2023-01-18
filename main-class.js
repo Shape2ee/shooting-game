@@ -133,28 +133,34 @@ class Game {
     if ("ArrowRight" in keysDown) {
       spaceShip.x += 4;
       // right
-    }
+    };
 
     if ("ArrowLeft" in keysDown) {
       spaceShip.x -= 4;
       // left
-    }
+    };
 
     if ("ArrowUp" in keysDown) {
       spaceShip.y -= 4;
       // right
-    }
+    };
 
     if ("ArrowDown" in keysDown) {
       spaceShip.y += 4;
       // left
-    }
+    };
 
     if (spaceShip.x <= 0) {
       spaceShip.x = 0;
-    } else if (spaceShip.x >= this.canvas.width - 64) {
-      spaceShip.x = this.canvas.width - 64;
-    }
+    } else if (spaceShip.x >= this.canvas.width - 57) {
+      spaceShip.x = this.canvas.width - 57;
+    };
+
+    if (spaceShip.y <= 0) {
+      spaceShip.y = 0;
+    } else if (spaceShip.y >= this.canvas.height - 65) {
+      spaceShip.y = this.canvas.height - 65;
+    };
 
     for (let i = 0; i < bulletList.length; i++) {
       if (bulletList[i].alive) {
@@ -162,12 +168,12 @@ class Game {
         bulletList[i].checkHit();
       } else {
         bulletList.splice(i, 1);
-      }
-    }
+      };
+    };
 
     for (let i = 0; i < monsterList.length; i++) {
       monsterList[i].update(spaceShip, this.canvas.height);
-    }
+    };
 
     // 레벨 체크
     spaceShip.update();
