@@ -6,16 +6,17 @@
 [Play the Game](https://shape2ee.github.io/shooting-game/)
 
 ## 🕹 Controls
-- **↑↓←→** : Move the ship
-- **Space**: Fire a missile
+- ↑↓←→: Move the ship
+- Space: Fire a missile
 
 ## 🖥 Motivation
 이 프로젝트는 Youtube '코딩알려주는 누나'의 강의를 보고 따라서<br>
 만들어보면 재밌겠다 싶어서 처음은 시작하게 되었습니다.<br>
 Canvas와 JavaScript의 기능들을 다양하게 사용하여<br>
 많은 경험을 할 수 있을 것이라 생각했습니다.<br>
-그리고 무작정 따라 하기 보다는 기존의 강의에서 아쉬운 부분들을<br>
-연관되는 함수와 코드들을 class문법으로 묶는 방향으로 수정하여<br>
+그리고 무작정 따라 하기 보다는 기존의 강의에서 아쉬운 부분이라 생각한<br>
+어떤 코드가 어디에 사용되었는지 파악하기 어려운 점을<br>
+class문법을 이용하여 연관이 된 코드끼리 그룹으로 묶어서<br>
 더욱 깔끔하게 작업을 하려고 했습니다.
 
 ## 🔑 문제해결 및 정리
