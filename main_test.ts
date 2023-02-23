@@ -1,15 +1,18 @@
-const $startScreen = document.querySelector("#start_screen") as HTMLDivElement
-const $canvasScreen = document.querySelector("#canvas_screen") as HTMLDivElement
-const $manualScreen = document.querySelector("#manual_screen") as HTMLDivElement;
-const $gameOver = document.querySelector(".game_over") as HTMLDivElement;
-const $gameBtn = document.querySelector(".game_btn") as HTMLButtonElement;
-const $replayBtn = document.querySelector(".replay_btn") as HTMLButtonElement;
-const $manualBtn = document.querySelector(".manual_btn") as HTMLButtonElement;
-const $okBtn = document.querySelector(".ok_btn") as HTMLButtonElement;
+const $startScreen = document.querySelector<HTMLDivElement>("#start_screen")
+const $canvasScreen = document.querySelector<HTMLDivElement>("#canvas_screen")
+const $manualScreen = document.querySelector<HTMLDivElement>("#manual_screen")
+const $gameOver = document.querySelector<HTMLDivElement>(".game_over")
+const $gameBtn = document.querySelector<HTMLButtonElement>(".game_btn")
+const $replayBtn = document.querySelector<HTMLButtonElement>(".replay_btn")
+const $manualBtn = document.querySelector<HTMLButtonElement>(".manual_btn")
+const $okBtn = document.querySelector<HTMLButtonElement>(".ok_btn")
 
-type UserKeys = "ArrowUp" | "ArrowLeft" | "ArrowDown" | "ArrowRight" | " "
-type Keys = {
-  [key in UserKeys]?: boolean;
+// type UserKeys = "ArrowUp" | "ArrowLeft" | "ArrowDown" | "ArrowRight" | " "
+// type Keys = {
+//   [key in UserKeys]?: boolean;
+// }
+interface Keys {
+  [key: string]: boolean
 }
 
 interface Meteor {
@@ -21,25 +24,25 @@ interface Bullet extends Meteor {
   alive: boolean;
 }
 
-let game = null;
+let game: Game | null = null;
 let keysDown: Keys = {};
 let bulletList: Bullet[] = []; // 총알 저장 리스트
 let meteorList: Meteor[] = []; // 몬스터 리스트
 let score: number = 0;
-let interval;
+let interval: number;
 let gameOver: boolean = false;
 let clickable: boolean = true;
 
 
 class Game {
-  public canvas: HTMLCanvasElement;
-  public ctx: CanvasRenderingContext2D;
-  public spaceShip?: SpaceShip | null;
-  public backgroundImage?: HTMLImageElement
-  public bulletImage?: HTMLImageElement
-  public spaceShipImage?: HTMLImageElement
-  public meteorImage?: HTMLImageElement
-  public gameOverImage?: HTMLImageElement
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private spaceShip?: SpaceShip | null;
+  private backgroundImage?: HTMLImageElement
+  private bulletImage?: HTMLImageElement
+  private spaceShipImage?: HTMLImageElement
+  private meteorImage?: HTMLImageElement
+  private gameOverImage?: HTMLImageElement
 
   constructor() {
     this.canvas = document.querySelector("canvas") as HTMLCanvasElement;
@@ -52,7 +55,7 @@ class Game {
     this.canvas.height = window.innerHeight;
     this.start();
   }
-  public start() {
+  private start() {
     this.changeScreen("game");
 
     this.spaceShip = new SpaceShip(
@@ -67,25 +70,38 @@ class Game {
     // this.createMonster();
     this.main();
   }
-  public changeScreen(screen: string) {
+  private changeScreen(screen: string) {
     if (screen === "start") {
-      $startScreen.style.display = "flex";
-      $canvasScreen.style.display = "none";
-      $gameOver.style.display = "none";
+      if ($startScreen instanceof HTMLDivElement) {
+        $startScreen.style.display = "flex";
+      }
+      if ($canvasScreen instanceof HTMLDivElement) {
+        $canvasScreen.style.display = "none";
+      }
+      if ($gameOver instanceof HTMLDivElement) {
+        $gameOver.style.display = "none";
+      }
     } else if (screen === "game") {
-      $startScreen.style.display = "none";
-      $canvasScreen.style.display = "flex";
-      $gameOver.style.display = "none";
+      if ($startScreen instanceof HTMLDivElement) {
+        $startScreen.style.display = "none";
+      }
+      if ($canvasScreen instanceof HTMLDivElement) {
+        $canvasScreen.style.display = "flex";
+      }
+      if ($gameOver instanceof HTMLDivElement) {
+        $gameOver.style.display = "none";
+      }
     } else if (screen === "gameOver") {
-      $gameOver.style.display = "block";
+      if ($gameOver instanceof HTMLDivElement) {
+        $gameOver.style.display = "block";
+      }
     }
   }
-  public main() {
+  private main() {
     if (gameOver) {
       this.changeScreen("gameOver");
       // this.quit();
-
-      $replayBtn.addEventListener("click", () => this.changeScreen("start"))
+      $replayBtn?.addEventListener("click", () => this.changeScreen("start"))
       return;
     }
 
@@ -93,7 +109,7 @@ class Game {
     this.renderImage();
     requestAnimationFrame(() => this.main());
   }
-  public loadImage() {
+  private loadImage() {
     this.backgroundImage = new Image();
     this.backgroundImage.src = "./images/background.gif";
 
@@ -109,20 +125,30 @@ class Game {
     this.gameOverImage = new Image();
     this.gameOverImage.src = "./images/gameover.png";
   }
-  public renderImage() {
-    const { ctx, spaceShip, canvas } = this;
-    ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+  private renderImage() {
+    const { ctx, spaceShip, canvas, backgroundImage, bulletImage, spaceShipImage, meteorImage } = this;
+    if (backgroundImage instanceof HTMLImageElement) {
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    }
 
     for (let i = 0; i < bulletList.length; i++) {
-      if (bulletList[i].alive) {
-        ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
+      if (!bulletList[i].alive) {
+        return;
+      }
+      if (bulletImage instanceof HTMLImageElement) {
+        ctx.drawImage(bulletImage, bulletList[i].x, bulletList[i].y);
       }
     }
 
-    ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+    if (spaceShipImage instanceof HTMLImageElement
+      && spaceShip instanceof SpaceShip) {
+      ctx.drawImage(spaceShipImage, spaceShip.x, spaceShip.y);
+    }
 
     for (let i = 0; i < meteorList.length; i++) {
-      ctx.drawImage(this.meteorImage, meteorList[i].x, meteorList[i].y);
+      if (meteorImage instanceof HTMLImageElement) {
+        ctx.drawImage(meteorImage, meteorList[i].x, meteorList[i].y);
+      }
     }
 
     ctx.fillText(`Score : ${score}`, 20, 30);

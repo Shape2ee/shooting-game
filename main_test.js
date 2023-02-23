@@ -76,15 +76,25 @@ class Game {
     }
     renderImage() {
         const { ctx, spaceShip, canvas } = this;
-        ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+        if (this.backgroundImage instanceof HTMLImageElement) {
+            ctx.drawImage(this.backgroundImage, 0, 0, canvas.width, canvas.height);
+        }
         for (let i = 0; i < bulletList.length; i++) {
-            if (bulletList[i].alive) {
+            if (!bulletList[i].alive) {
+                return;
+            }
+            if (this.bulletImage instanceof HTMLImageElement) {
                 ctx.drawImage(this.bulletImage, bulletList[i].x, bulletList[i].y);
             }
         }
-        ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+        if (this.spaceShipImage instanceof HTMLImageElement
+            && spaceShip instanceof SpaceShip) {
+            ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
+        }
         for (let i = 0; i < meteorList.length; i++) {
-            ctx.drawImage(this.meteorImage, meteorList[i].x, meteorList[i].y);
+            if (this.meteorImage instanceof HTMLImageElement) {
+                ctx.drawImage(this.meteorImage, meteorList[i].x, meteorList[i].y);
+            }
         }
         ctx.fillText(`Score : ${score}`, 20, 30);
         ctx.fillStyle = "white";
