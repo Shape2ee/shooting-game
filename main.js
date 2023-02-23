@@ -9,7 +9,7 @@ const $okBtn = document.querySelector(".ok_btn");
 let game = null;
 let keysDown = {};
 let bulletList = []; // 총알 저장 리스트
-let monsterList = []; // 몬스터 리스트
+let meteorList = []; // 몬스터 리스트
 let score = 0; 
 let interval;
 let gameOver = false;
@@ -35,7 +35,7 @@ class Game {
 
     this.loadImage();
     this.keyEvent();
-    this.createMonster();
+    this.createMeteor();
     this.main();
   }
   quit() {
@@ -46,7 +46,7 @@ class Game {
     document.removeEventListener("keyup", this.onKeyUp);
     score = 0;
     bulletList = [];
-    monsterList = [];
+    meteorList = [];
     gameOver = false;
     keysDown = []
   }
@@ -67,7 +67,6 @@ class Game {
     if (gameOver) {
       this.changeScreen("gameOver");
       this.quit();
-
       $replayBtn.addEventListener("click", () => this.changeScreen("start"))
       return;
     }
@@ -86,8 +85,8 @@ class Game {
     this.spaceShipImage = new Image();
     this.spaceShipImage.src = "./images/space-ship.png";
 
-    this.monsterImage = new Image();
-    this.monsterImage.src = `./images/meteor.png`;
+    this.meteorImage = new Image();
+    this.meteorImage.src = `./images/meteor.png`;
 
     this.gameOverImage = new Image();
     this.gameOverImage.src = "./images/gameover.png";
@@ -104,8 +103,8 @@ class Game {
 
     ctx.drawImage(this.spaceShipImage, spaceShip.x, spaceShip.y);
 
-    for (let i = 0; i < monsterList.length; i++) {
-      ctx.drawImage(this.monsterImage, monsterList[i].x, monsterList[i].y);
+    for (let i = 0; i < meteorList.length; i++) {
+      ctx.drawImage(this.meteorImage, meteorList[i].x, meteorList[i].y);
     }
 
     ctx.fillText(`Score : ${score}`, 20, 30);
@@ -171,10 +170,10 @@ class Game {
       };
     };
 
-    for (let i = 0; i < monsterList.length; i++) {
-      monsterList[i].update(spaceShip, this.canvas.height);
+    for (let i = 0; i < meteorList.length; i++) {
+      meteorList[i].update(spaceShip, this.canvas.height);
     };
-
+    
     // 레벨 체크
     spaceShip.update();
   }
@@ -183,13 +182,11 @@ class Game {
 
     let b = new Bullet();
     b.init(spaceShip);
-    console.log(bulletList)
-    console.log(monsterList)
   }
-  createMonster() {
+  createMeteor() {
     interval = setInterval(() => {
-      let monster = new Monster();
-      monster.init(this.canvas.width);
+      let meteor = new Meteor();
+      meteor.init(this.canvas.width);
     }, 1000);
   }
 }
@@ -228,21 +225,21 @@ class Bullet {
     }  
   }
   checkHit() {
-    for (let i = 0; i < monsterList.length; i++) {
+    for (let i = 0; i < meteorList.length; i++) {
       if (
-        this.y <= monsterList[i].y &&
-        this.x + 16 >= monsterList[i].x &&
-        this.x + 16 <= monsterList[i].x + 48
+        this.y <= meteorList[i].y &&
+        this.x + 16 >= meteorList[i].x &&
+        this.x + 16 <= meteorList[i].x + 48
       ) {
         score += 1;
         this.alive = false;
-        monsterList.splice(i, 1);
+        meteorList.splice(i, 1);
       }
     }
   }
 }
 
-class Monster {
+class Meteor {
   constructor() {
     this.x = 0;
     this.y = 0;
@@ -250,8 +247,7 @@ class Monster {
   init(width) {
     this.y = 0;
     this.x = this.generateRandomPosX(0, width - 48);
-
-    monsterList.push(this);
+    meteorList.push(this);
   }
   generateRandomPosX(min, max) {
     let randomNum = Math.floor(Math.random() * (max - min + 1));
