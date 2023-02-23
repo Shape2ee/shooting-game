@@ -67,7 +67,6 @@ class Game {
     if (gameOver) {
       this.changeScreen("gameOver");
       this.quit();
-
       $replayBtn.addEventListener("click", () => this.changeScreen("start"))
       return;
     }
@@ -174,7 +173,7 @@ class Game {
     for (let i = 0; i < meteorList.length; i++) {
       meteorList[i].update(spaceShip, this.canvas.height);
     };
-
+    
     // 레벨 체크
     spaceShip.update();
   }
@@ -248,7 +247,6 @@ class Meteor {
   init(width) {
     this.y = 0;
     this.x = this.generateRandomPosX(0, width - 48);
-
     meteorList.push(this);
   }
   generateRandomPosX(min, max) {
